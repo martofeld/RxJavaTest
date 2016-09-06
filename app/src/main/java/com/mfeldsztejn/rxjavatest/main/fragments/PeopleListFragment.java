@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 
 import com.mfeldsztejn.rxjavatest.R;
 import com.mfeldsztejn.rxjavatest.dto.People;
-import com.mfeldsztejn.rxjavatest.main.fragments.adapters.PeopleAdapter;
+import com.mfeldsztejn.rxjavatest.main.adapters.PeopleAdapter;
+import com.mfeldsztejn.rxjavatest.main.interfaces.OnItemClickListener;
 import com.mfeldsztejn.rxjavatest.repositories.Swapi;
 import com.mfeldsztejn.rxjavatest.repositories.services.ItemService;
 
@@ -61,7 +62,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public void onNext(People people) {
                 Log.d("TAG", people.toString());
-                adapter = new PeopleAdapter(people);
+                adapter = new PeopleAdapter(people, (OnItemClickListener)getActivity());
                 recyclerView.setAdapter(adapter);
             }
         });

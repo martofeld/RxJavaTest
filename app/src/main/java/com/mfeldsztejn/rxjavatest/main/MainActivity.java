@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.mfeldsztejn.rxjavatest.R;
+import com.mfeldsztejn.rxjavatest.dto.Person;
+import com.mfeldsztejn.rxjavatest.main.interfaces.OnItemClickListener;
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
+public class MainActivity extends AppCompatActivity implements OnItemClickListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -35,18 +37,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        Toast.makeText(this, "Selected tab " + tab.getText(), Toast.LENGTH_SHORT).show();
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
+    public void onPersonSelected(Person person) {
+        Toast.makeText(this, person.getName(), Toast.LENGTH_SHORT).show();
     }
 }
