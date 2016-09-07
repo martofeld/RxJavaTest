@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.mfeldsztejn.rxjavatest.main.fragments.PeopleListFragment;
+import com.mfeldsztejn.rxjavatest.main.fragments.StartshipsListFragment;
 
 /**
  * Created by mfeldsztejn on 9/5/16.
@@ -23,12 +24,12 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch(position){
+        switch (position) {
             case 0:
                 return "People";
             case 1:
-                return "Ships";
-            case 3:
+                return "Starships";
+            case 2:
                 return "Planets";
         }
         return super.getPageTitle(position);
@@ -36,6 +37,12 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        switch (position) {
+            case 0:
+                return new PeopleListFragment();
+            case 1:
+                return new StartshipsListFragment();
+        }
         return new PeopleListFragment();
     }
 }

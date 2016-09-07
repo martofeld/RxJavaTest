@@ -9,49 +9,42 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mfeldsztejn.rxjavatest.R;
-import com.mfeldsztejn.rxjavatest.dto.People;
-import com.mfeldsztejn.rxjavatest.main.adapters.PeopleAdapter;
+import com.mfeldsztejn.rxjavatest.dto.Starships;
+import com.mfeldsztejn.rxjavatest.main.adapters.StartshipAdapter;
 import com.mfeldsztejn.rxjavatest.main.interfaces.OnItemClickListener;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by mfeldsztejn on 9/5/16.
+ * Created by mfeldsztejn on 9/6/16.
  */
 
-public class PeopleListFragment extends BaseFragment<People> {
-
+public class StartshipsListFragment extends BaseFragment<Starships> {
     private RecyclerView recyclerView;
 
-    public PeopleListFragment() {
-        super();
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Observable<People> peopleList = service.getPeople();
-        awaitForView(peopleList)
+        awaitForView(service.getStartships())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNextAction, onErrorAction);
     }
 
     @Override
-    protected void onSuccess(People people) {
-        super.onSuccess(people);
-        recyclerView.setAdapter(new PeopleAdapter(people, (OnItemClickListener) getActivity()));
+    protected void onSuccess(Starships starships) {
+        super.onSuccess(starships);
+        recyclerView.setAdapter(new StartshipAdapter(starships, (OnItemClickListener) getActivity()));
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_list, container, false);
-        recyclerView = (RecyclerView) v.findViewById(R.id.list);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         subject.onNext(recyclerView);
-        return v;
+        return view;
     }
 }

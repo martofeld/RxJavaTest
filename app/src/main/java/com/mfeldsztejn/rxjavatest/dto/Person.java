@@ -11,6 +11,9 @@ import java.util.List;
  */
 
 public class Person extends Item {
+    @SerializedName("url")
+    @Expose
+    private String url;
     @SerializedName("height")
     @Expose
     private String height;
@@ -53,6 +56,20 @@ public class Person extends Item {
     @SerializedName("edited")
     @Expose
     private String edited;
+
+    /**
+     * @return The url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url The url
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     /**
      * @return The height
