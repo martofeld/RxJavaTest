@@ -14,14 +14,14 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.subjects.PublishSubject;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Created by mfeldsztejn on 9/6/16.
  */
 
 public class BaseFragment<I> extends Fragment {
-    protected PublishSubject<RecyclerView> subject = PublishSubject.create();
+    protected BehaviorSubject<RecyclerView> subject = BehaviorSubject.create();
     protected ItemService service;
     protected Action1<I> onNextAction;
     protected Action1<Throwable> onErrorAction;
