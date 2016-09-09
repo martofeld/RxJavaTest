@@ -6,19 +6,22 @@ import android.view.ViewGroup;
 
 import com.mfeldsztejn.rxjavatest.R;
 import com.mfeldsztejn.rxjavatest.dto.People;
+import com.mfeldsztejn.rxjavatest.dto.Person;
 import com.mfeldsztejn.rxjavatest.main.interfaces.OnItemClickListener;
 import com.mfeldsztejn.rxjavatest.main.viewholders.PeopleViewHolder;
+
+import java.util.List;
 
 /**
  * Created by mfeldsztejn on 9/6/16.
  */
 
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleViewHolder> {
-    private People values;
+    private List<Person> values;
     private OnItemClickListener listener;
 
     public PeopleAdapter(People values, OnItemClickListener listener){
-        this.values = values;
+        this.values = values.getPeople();
         this.listener = listener;
     }
 
@@ -29,11 +32,15 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleViewHolder> {
 
     @Override
     public void onBindViewHolder(PeopleViewHolder holder, int position) {
-        holder.bind(values.getPeople().get(position));
+        holder.bind(values.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return values.getPeople().size();
+        return values.size();
+    }
+
+    public void addAll(List<Person> people) {
+        values.addAll(people);
     }
 }

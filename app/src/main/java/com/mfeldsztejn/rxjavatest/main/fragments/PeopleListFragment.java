@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,12 @@ import rx.schedulers.Schedulers;
 
 public class PeopleListFragment extends BaseFragment<People> {
 
+    private static final int PAGE_SIZE = 10;
     private RecyclerView recyclerView;
+    private PeopleAdapter adapter;
+    private boolean isLoading;
+    private People people;
+    private int page = 1;
 
     public PeopleListFragment() {
         super();
@@ -32,7 +39,12 @@ public class PeopleListFragment extends BaseFragment<People> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Observable<People> peopleList = service.getPeople();
+        requestData();
+    }
+
+    private void requestData() {
+        isLoading = true;
+        Observable<People> peopleList = service.getPeople(page);
         awaitForView(peopleList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,8 +53,15 @@ public class PeopleListFragment extends BaseFragment<People> {
 
     @Override
     protected void onSuccess(People people) {
-        super.onSuccess(people);
-        recyclerView.setAdapter(new PeopleAdapter(people, (OnItemClickListener) getActivity()));
+        isLoading = false;
+        this.people = people;
+        if (adapter == null) {
+            this.adapter = new PeopleAdapter(people, (OnItemClickListener) getActivity());
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.addAll(people.getPeople());
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Nullable
@@ -50,7 +69,25 @@ public class PeopleListFragment extends BaseFragment<People> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && !TextUtils.isEmpty(people.getNext())) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= PAGE_SIZE) {
+                        page++;
+                        requestData();
+                    }
+                }
+            }
+        });
         subject.onNext(recyclerView);
         return v;
     }
