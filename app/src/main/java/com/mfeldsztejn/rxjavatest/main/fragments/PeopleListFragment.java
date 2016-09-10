@@ -38,12 +38,19 @@ public class PeopleListFragment extends BaseListFragment<People> {
     protected void onRequestSuccess(People people) {
         this.people = people;
         if (adapter == null) {
-            this.adapter = new PeopleAdapter(people, (OnItemClickListener) getActivity());
+            adapter = new PeopleAdapter(people, (OnItemClickListener) getActivity());
             recyclerView.setAdapter(adapter);
         } else {
             adapter.addAll(people.getPeople());
+            adapter.setLoading(false);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onRequestError(Throwable t) {
+        super.onRequestError(t);
+        adapter.setLoading(false);
     }
 
     @Override
@@ -51,6 +58,7 @@ public class PeopleListFragment extends BaseListFragment<People> {
         if (!isLoading && !TextUtils.isEmpty(people.getNext())) {
             page++;
             requestData();
+            adapter.setLoading(true);
         }
     }
 }

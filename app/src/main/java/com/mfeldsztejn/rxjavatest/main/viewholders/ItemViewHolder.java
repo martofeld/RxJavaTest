@@ -29,7 +29,9 @@ public abstract class ItemViewHolder<T extends Item> extends RecyclerView.ViewHo
     public void bind(T item){
         nameTv.setText(item.getName());
         descriptionTv.setText(getDescriptionText(item));
-        itemView.setOnClickListener(getClickListener(item));
+        if (getClickListener(item) != null) {
+            itemView.setOnClickListener(getClickListener(item));
+        }
     }
 
     protected abstract String getDescriptionText(T i);
