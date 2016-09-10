@@ -8,23 +8,23 @@ import com.mfeldsztejn.rxjavatest.dto.Item;
  * Created by mfeldsztejn on 9/10/16.
  */
 
-public class LoadingViewHolder<T extends Item> extends ItemViewHolder<T> {
+public class LoadingViewHolder<I extends Item> extends ItemViewHolder<I> {
     public LoadingViewHolder(View itemView) {
         super(itemView, null);
     }
 
     @Override
-    public void bind(T item) {
+    public void bind(I item) {
         //Do nothing
     }
 
     @Override
-    protected String getDescriptionText(T i) {
+    protected String getDescriptionText(I i) {
         return null;
     }
 
     @Override
-    protected View.OnClickListener getClickListener(T i) {
+    protected View.OnClickListener getClickListener(I i) {
         return null;
     }
 }
