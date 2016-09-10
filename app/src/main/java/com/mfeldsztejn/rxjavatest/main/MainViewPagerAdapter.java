@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.mfeldsztejn.rxjavatest.main.fragments.PeopleListFragment;
-import com.mfeldsztejn.rxjavatest.main.fragments.StartshipsListFragment;
+import com.mfeldsztejn.rxjavatest.main.fragments.StartShipsListFragment;
 
 /**
  * Created by mfeldsztejn on 9/5/16.
@@ -28,7 +28,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "People";
             case 1:
-                return "Starships";
+                return "Star Ships";
             case 2:
                 return "Planets";
         }
@@ -41,7 +41,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new PeopleListFragment();
             case 1:
-                return new StartshipsListFragment();
+                return new StartShipsListFragment();
         }
         return new PeopleListFragment();
     }

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Starships {
+public class StarShips {
 
     @SerializedName("count")
     @Expose
@@ -19,7 +19,7 @@ public class Starships {
     private String previous;
     @SerializedName("results")
     @Expose
-    private List<Starship> starships = new ArrayList<Starship>();
+    private List<StarShip> starShips = new ArrayList<StarShip>();
 
     /**
      * @return The count
@@ -64,17 +64,17 @@ public class Starships {
     }
 
     /**
-     * @return The starships
+     * @return The starShips
      */
-    public List<Starship> getStarships() {
-        return starships;
+    public List<StarShip> getStarShips() {
+        return starShips;
     }
 
     /**
-     * @param starships The starships
+     * @param starShips The starShips
      */
-    public void setStarships(List<Starship> starships) {
-        this.starships = starships;
+    public void setStarShips(List<StarShip> starShips) {
+        this.starShips = starShips;
     }
 
 }

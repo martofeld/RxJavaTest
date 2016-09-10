@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.mfeldsztejn.rxjavatest.R;
 import com.mfeldsztejn.rxjavatest.dto.Person;
-import com.mfeldsztejn.rxjavatest.dto.Starship;
+import com.mfeldsztejn.rxjavatest.dto.StarShip;
 import com.mfeldsztejn.rxjavatest.main.fragments.BaseListFragment;
 import com.mfeldsztejn.rxjavatest.main.interfaces.OnItemClickListener;
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     @Override
-    public void onStarshipSelected(Starship starship) {
+    public void onStarShipSelected(StarShip starShip) {
 
     }
 
