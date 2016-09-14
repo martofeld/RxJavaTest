@@ -18,13 +18,13 @@ import java.util.List;
 
 public abstract class ItemAdapter<I extends Item> extends RecyclerView.Adapter<ItemViewHolder<I>> {
 
-    protected static final int ITEM_VIEW_HOLDER = 1;
-    protected static final int LOADING_VIEW_HOLDER = 2;
-    protected final OnItemClickListener listener;
-    protected List<I> values;
+    private static final int ITEM_VIEW_HOLDER = 1;
+    private static final int LOADING_VIEW_HOLDER = 2;
+    final OnItemClickListener listener;
+    private List<I> values;
     private boolean isLoading;
 
-    public ItemAdapter(List<I> values, OnItemClickListener listener) {
+    ItemAdapter(List<I> values, OnItemClickListener listener) {
         this.values = values;
         this.listener = listener;
     }
@@ -71,6 +71,9 @@ public abstract class ItemAdapter<I extends Item> extends RecyclerView.Adapter<I
     }
 
     public void setLoading(boolean isLoading) {
+        if (this.isLoading == isLoading) {
+            return;
+        }
         this.isLoading = isLoading;
         if (isLoading)
             notifyItemInserted(getItemCount());

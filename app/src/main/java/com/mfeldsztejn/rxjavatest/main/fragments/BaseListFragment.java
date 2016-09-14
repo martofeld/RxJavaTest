@@ -72,7 +72,7 @@ public abstract class BaseListFragment<I extends Object> extends Fragment implem
         cleanSubscription();
     }
 
-    private void onSuccess(I i) {
+    void onSuccess(I i) {
         isLoading = false;
         cleanSubscription();
         onRequestSuccess(i);
