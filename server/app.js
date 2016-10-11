@@ -1,5 +1,5 @@
 var express = require('express');
-var peopleService = require('./services/people_service');
+var peopleService = require('./app/services/people_service');
 
 var app = express();
 var router = express.Router();
@@ -10,6 +10,9 @@ router.get('/', function (req, res) {
 
 router.route('/people')
     .get(peopleService.getPeople);
+
+router.route('/people/:id')
+    .get(peopleService.getPerson);
 
 app.use('/', router);
 
