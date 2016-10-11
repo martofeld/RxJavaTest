@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.mfeldsztejn.rxjavatest.R;
+import com.mfeldsztejn.rxjavatest.detail.activities.PersonDetailActivity;
 import com.mfeldsztejn.rxjavatest.dto.Person;
 import com.mfeldsztejn.rxjavatest.dto.StarShip;
 import com.mfeldsztejn.rxjavatest.main.fragments.BaseListFragment;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onPersonSelected(Person person) {
         Toast.makeText(this, person.getName(), Toast.LENGTH_SHORT).show();
+        startActivity(PersonDetailActivity.getIntent(this, person));
     }
 
     @Override
