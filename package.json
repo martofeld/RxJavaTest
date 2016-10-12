@@ -1,0 +1,20 @@
+{
+  "name": "swapi",
+  "version": "0.0.1",
+  "description": "A middleware server for the star wars api to addapt the data to my dtos",
+  "main": "app.js",
+  "author": "Martin Feldsztejn",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "request": "^2.75.0",
+    "run": "^1.4.0"
+  },
+  "engines": {
+    "node": "4.4.4",
+    "npm": "2.15.1"
+  },
+  "scripts": {
+    "start": "node server/app.js"
+  }
+}
