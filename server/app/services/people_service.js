@@ -2,9 +2,8 @@
  * Created by mfeldsztejn on 10/9/16.
  */
 //MODULES
-var request = require("request");
+var request_service = require("./request_service");
 var constants = require("../constants/request_constants");
-var errorHelper = require("../helpers/error_helper");
 var imagesService = require("./images_service");
 
 function getPeople(req, res, next) {
@@ -14,25 +13,21 @@ function getPeople(req, res, next) {
     }
 
     var options = {
-        url: constants.ENDPOINT + "/people?page=" + page,
-        method: "GET",
-        headers: constants.HEADERS
+        url: constants.ENDPOINT + "/people?page=" + page
     };
-
-    request(options, function (error, response, body) {
-        errorHelper.handleError(error, response, res);
-
-        response.setEncoding('utf-8');
+    
+    request_service.get(options, function (error, response) {
+        if (error) {
+            return res.send(json_body);
+        }
         var people = {};
 
-        var json_body = JSON.parse(body);
-
-        people.count = json_body.count;
-        people.next = json_body.next;
-        people.previous = json_body.previous;
+        people.count = response.count;
+        people.next = response.next;
+        people.previous = response.previous;
         people.results = [];
-        for (var i = 0; i < json_body.results.length; i++) {
-            var result = json_body.results[i];
+        for (var i = 0; i < response.results.length; i++) {
+            var result = response.results[i];
             people.results.push({
                 name: result.name,
                 height: result.height,
@@ -41,7 +36,7 @@ function getPeople(req, res, next) {
             });
         }
 
-        res.send(people);
+        return res.send(people);
     });
 }
 
@@ -49,16 +44,21 @@ function getPerson(req, res, next) {
     var id = req.params.id;
 
     var options = {
-        url: constants.ENDPOINT + "/people/" + id,
-        method: "GET",
-        headers: constants.HEADERS
+        url: constants.ENDPOINT + "/people/" + id
     };
 
-    request(options, function (error, response, body) {
-        var json_body = JSON.parse(body);
-        imagesService.getImages(json_body.name, function (images) {
-            json_body.images = images;
-            res.send(json_body);
+    request_service.get(options, function (error, person) {
+        if (error) {
+            return res.send(person);
+        }
+
+        imagesService.getImages(person.name, function (error, images) {
+            if (error){
+                return res.send(images);
+            } else {
+                person.images = images;
+                return res.send(person);
+            }
         });
     });
 

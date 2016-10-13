@@ -10,7 +10,7 @@ var k400Error = {
     "message": "400 bad request"
 };
 
-function handlePossibleRequestError(error, response, res) {
+function handlePossibleRequestError(error, response) {
     var definitiveError;
     switch(response.statusCode){
         case 400:
@@ -24,9 +24,7 @@ function handlePossibleRequestError(error, response, res) {
             break;
     }
     
-    if (definitiveError) {
-        res.send(definitiveError);
-    }
+    return definitiveError;
 }
 
 module.exports = {

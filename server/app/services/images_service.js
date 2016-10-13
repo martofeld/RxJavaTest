@@ -2,7 +2,7 @@
  * Created by mfeldsztejn on 10/11/16.
  */
 
-var request = require("request");
+var request_service = require("./request_service");
 var constants = require("../constants/request_constants");
 
 function getImages(query, callback) {
@@ -11,29 +11,40 @@ function getImages(query, callback) {
     headers["Api-Key"] = constants.IMAGES_API_KEY;
     
     var options = {
-        url: constants.IMAGES_ENDPOINT + "&phrase=" + query,
-        method: "GET",
-        headers: headers
+        url: constants.IMAGES_ENDPOINT + "&phrase=" + query + " movies"
     };
     
-    request(options, function (error, response, body) {
-        var json_body = JSON.parse(body);
+    request_service.get(options, function (error, response) {
+        if (error){
+            return callback(error, response);
+        }
+        
         var images = [];
-        for (var i = 0; i < 5; i++){
-            var random = _getRandom(json_body.images.length);
-            var image = json_body.images[random].display_sizes[0].uri;
+        var retries = 5;
+        for (var i = 0; i < 5 && i < response.images.length && retries > 0; i++){
+            var random = _getRandom(response.images.length);
+            var image = _getUrlForImage(response.images[random]);
             if(images.indexOf(image) == -1) {
                 images.push(image);
             } else {
                 i--;
+                retries--;
             }
         }
-        return callback(images);
+        return callback(false, images);
     });
 }
 
 function _getRandom(top) {
-    return Math.floor((Math.random() * top) + 1);
+    return Math.floor((Math.random() * top));
+}
+
+function _getUrlForImage(image) {
+    var url;
+    if (image && image.display_sizes && image.display_sizes.length > 0){
+        url = image.display_sizes[0].uri;
+    }
+    return url;
 }
 
 module.exports = {
