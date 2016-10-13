@@ -14,7 +14,7 @@ import rx.Observable;
  * Created by mfeldsztejn on 9/6/16.
  */
 
-public class StartShipsListFragment extends BaseListFragment<StarShips> {
+public class StarShipsListFragment extends BaseListFragment<StarShips> {
     private StarShipAdapter adapter;
     private StarShips starShips;
     private int page = 1;
@@ -23,6 +23,11 @@ public class StartShipsListFragment extends BaseListFragment<StarShips> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestData();
+    }
+
+    @Override
+    protected Observable<StarShips> getRequestObservable() {
+        return service.getStartShips(page);
     }
 
     @Override
@@ -36,11 +41,6 @@ public class StartShipsListFragment extends BaseListFragment<StarShips> {
             adapter.setLoading(false);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected Observable<StarShips> getRequestObservable() {
-        return service.getStartShips(page);
     }
 
     @Override
