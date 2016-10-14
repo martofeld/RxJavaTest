@@ -1,8 +1,15 @@
 var express = require('express');
 var peopleService = require('./app/services/people_service');
+var apicache = require('apicache');
+var cache = apicache.middleware("1 day");
+apicache.options({
+    debug: true
+});
 
 var app = express();
 var router = express.Router();
+
+router.use(cache);
 
 router.get('/', function (req, res) {
     res.send('Hello World!');
