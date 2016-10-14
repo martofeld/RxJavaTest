@@ -2,9 +2,11 @@
  * Created by mfeldsztejn on 10/9/16.
  */
 //MODULES
+var async = require("async");
 var request_service = require("./request_service");
 var constants = require("../constants/request_constants");
 var imagesService = require("./images_service");
+var obtained = {};
 
 function getPeople(req, res, next) {
     var page = req.query.page;
@@ -15,10 +17,10 @@ function getPeople(req, res, next) {
     var options = {
         url: constants.ENDPOINT + "/people?page=" + page
     };
-    
+
     request_service.get(options, function (error, response) {
         if (error) {
-            return res.send(json_body);
+            return res.send(response);
         }
         var people = {};
 
@@ -53,15 +55,68 @@ function getPerson(req, res, next) {
         }
 
         imagesService.getImages(person.name, function (error, images) {
-            if (error){
+            if (error) {
                 return res.send(images);
             } else {
                 person.images = images;
-                return res.send(person);
             }
         });
+
+        var filmsReady, starShipsReady, vehiclesReady;
+        async.map(person.films, requestUrl, function (error, films) {
+            console.log(person.name + " films: " + films);
+            person.films = films;
+            filmsReady = true;
+            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
+        });
+
+        async.map(person.vehicles, requestUrl, function (error, vehicles) {
+            console.log(person.name + " vehicles: " + vehicles);
+            person.vehicles = vehicles;
+            vehiclesReady = true;
+            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
+        });
+
+        async.map(person.starships, requestUrl, function (error, starShips) {
+            console.log(person.name + " star ships: " + starShips);
+            person.starships = starShips;
+            starShipsReady = true;
+            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
+        });
+
     });
 
+}
+
+function _sendResponseIfPossible() {
+    var res = arguments[0];
+    var person = arguments[1];
+    var canSend = true;
+    for (var i = 2; i < arguments.length; i++) {
+        canSend = canSend && arguments[i];
+    }
+    if (canSend) {
+        console.log("sending response now");
+        res.send(person);
+    }
+}
+
+function requestUrl(url, callback) {
+    if (url in obtained) {
+        console.log(url + "was already obtained, returning saved value..." + obtained[url]);
+        return callback(null, {name: obtained[url], url: url})
+    } else {
+        request_service.get({url: url}, function (error, response) {
+            if (error) {
+                return callback(error, error);
+            } else {
+                var name = response.title || response.name;
+                console.log("Saving " + url + " with name " + name);
+                obtained[url] = name;
+                return callback(null, {name: name, url: response.url});
+            }
+        });
+    }
 }
 
 module.exports = {
