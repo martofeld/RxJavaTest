@@ -62,43 +62,42 @@ function getPerson(req, res, next) {
             }
         });
 
-        var filmsReady, starShipsReady, vehiclesReady;
-        async.map(person.films, requestUrl, function (error, films) {
-            console.log(person.name + " films: " + films);
-            person.films = films;
-            filmsReady = true;
-            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
-        });
+        var flow = {
+            //Dont check for films, if they are in the api they must be at least in one movie
+            films: function (callback) {
+                async.map(person.films, requestUrl, function (error, films) {
+                    callback(error, films);
+                });
+            }
+        };
+        if (person.vehicles.length > 0) {
+            flow.vehicles = function (callback) {
+                async.map(person.vehicles, requestUrl, function (error, vehicles) {
+                    callback(error, vehicles);
+                });
+            };
+        }
+        if (person.starships.length > 0) {
+            flow.starships = function (callback) {
+                async.map(person.starships, requestUrl, function (error, starShips) {
+                    callback(error, starShips)
+                });
+            };
+        }
 
-        async.map(person.vehicles, requestUrl, function (error, vehicles) {
-            console.log(person.name + " vehicles: " + vehicles);
-            person.vehicles = vehicles;
-            vehiclesReady = true;
-            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
-        });
-
-        async.map(person.starships, requestUrl, function (error, starShips) {
-            console.log(person.name + " star ships: " + starShips);
-            person.starships = starShips;
-            starShipsReady = true;
-            _sendResponseIfPossible(res, person, filmsReady, starShipsReady, vehiclesReady)
+        async.auto(flow, function (error, results) {
+            if (error) {
+                res.send(results);
+            } else {
+                person.films = results.films;
+                person.vehicles = results.vehicles;
+                person.starships = results.starships;
+                res.send(person);
+            }
         });
 
     });
 
-}
-
-function _sendResponseIfPossible() {
-    var res = arguments[0];
-    var person = arguments[1];
-    var canSend = true;
-    for (var i = 2; i < arguments.length; i++) {
-        canSend = canSend && arguments[i];
-    }
-    if (canSend) {
-        console.log("sending response now");
-        res.send(person);
-    }
 }
 
 function requestUrl(url, callback) {
