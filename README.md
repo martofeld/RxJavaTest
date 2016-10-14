@@ -2,8 +2,8 @@
 
 Im using this repo as a place to host the code for a learning app.
 
-The app is android based with RxJava over it.
-The server is nodejs based used to adapt the original api to custom dtos.
+- The app is android based with RxJava over it. 
+- The server is nodejs based used to adapt the original api to custom dtos.
 
 Someday:
 - An ios app also
