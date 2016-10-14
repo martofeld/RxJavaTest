@@ -103,12 +103,12 @@ function _sendResponseIfPossible() {
 
 function requestUrl(url, callback) {
     if (url in obtained) {
-        console.log(url + "was already obtained, returning saved value..." + obtained[url]);
+        console.log(url + " was already obtained, returning saved value..." + obtained[url]);
         return callback(null, {name: obtained[url], url: url})
     } else {
         request_service.get({url: url}, function (error, response) {
             if (error) {
-                return callback(error, error);
+                return callback(error, response);
             } else {
                 var name = response.title || response.name;
                 console.log("Saving " + url + " with name " + name);
